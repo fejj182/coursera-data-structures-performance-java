@@ -133,5 +133,12 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
 	}
-	
+
+	public double getFleschScore()
+	{
+		// TODO: You will play with this method in week 1, and
+		// then implement it in week 2
+	    return 206.835 - (1.015 * getNumWords() / getNumSentences()) - (84.6 * getNumSyllables() / getNumWords());
+	}
+
 }
