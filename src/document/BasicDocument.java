@@ -37,13 +37,9 @@ public class BasicDocument extends Document
 		//TODO: Implement this method in week 2 according to the comments above.  
 		// See the Module 2 support videos if you need help.
 		String text = this.getText();
-
-		if (text.length() == 0) {
-			return 0;
-		}
-
 		String regex = "[^a-zA-Z]+";
-		return text.split(regex).length;
+
+		return text.length() != 0 ? text.split(regex).length : 0;
 	}
 	
 	/**
@@ -64,13 +60,9 @@ public class BasicDocument extends Document
 	    //TODO: Implement this method.  See the Module 2 support videos 
         // if you need help.
 		String text = this.getText();
-
-		if (text.length() == 0) {
-			return 0;
-		}
-
 		String regex = "[.!?]+";
-		return text.split(regex).length;
+
+		return text.length() != 0 ? text.split(regex).length : 0;
 	}
 	
 	/**
@@ -101,8 +93,6 @@ public class BasicDocument extends Document
 			syllables += countSyllables(word);
 		}
 		return syllables;
-
-//        return countSyllables(this.getText());
 	}
 	
 	
