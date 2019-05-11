@@ -1,5 +1,6 @@
 package document;
 
+import javax.print.Doc;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -17,7 +18,7 @@ public class DocumentBenchmarking {
 
 	    // Run each test more than once to get bigger numbers and less noise.
 	    // You can try playing around with this number.
-	    int trials = 100;
+	    int trials = 200;
 
 	    // The text to test on
 	    String textfile = "data/warAndPeace.txt";
@@ -37,11 +38,20 @@ public class DocumentBenchmarking {
 		// TODO: Fill in the rest of this method so that it runs two loops
 		// and prints out timing results as described in the assignment 
 		// instructions and following the pseudocode below.
-		for (int numToCheck = start; numToCheck < numSteps*increment + start; 
+
+		System.out.println("NumberOfChars\tBasicTime\tEfficientTime");
+
+		for (int numToCheck = start; numToCheck < numSteps*increment + start;
 				numToCheck += increment)
 		{
 			// numToCheck holds the number of characters that you should read from the 
-			// file to create both a BasicDocument and an EfficientDocument.  
+			// file to create both a BasicDocument and an EfficientDocument.
+
+			System.out.printf(numToCheck + "\t");
+			String charsToCheck = getStringFromFile(textfile, numToCheck);
+
+			timeFleschScore("basic", trials, charsToCheck);
+			timeFleschScore("efficient", trials, charsToCheck);
 			
 			/* Each time through this loop you should:
 			 * 1. Print out numToCheck followed by a tab (\t) (NOT a newline)
@@ -61,6 +71,30 @@ public class DocumentBenchmarking {
 			 
 		}
 	
+	}
+
+	public static void timeFleschScore(String docType, int trials, String charsToCheck) {
+		long start = System.nanoTime();
+		String separator = new String();
+		for (int i = 0; i < trials; i++) {
+			Document doc;
+			switch (docType) {
+				case "basic":
+					doc = new BasicDocument(charsToCheck);
+					separator = "\t";
+					break;
+				case "efficient":
+					doc = new EfficientDocument(charsToCheck);
+					separator = "\n";
+					break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + docType);
+			}
+			doc.getFleschScore();
+		}
+		long end = System.nanoTime();
+		double timeToCompleteMs = (double) (end - start) / 1000000000;
+		System.out.printf(timeToCompleteMs + separator);
 	}
 	
 	/** Get a specified number of characters from a text file
