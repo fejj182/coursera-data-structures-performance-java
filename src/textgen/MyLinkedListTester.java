@@ -5,8 +5,6 @@ package textgen;
 
 import static org.junit.Assert.*;
 
-import java.util.LinkedList;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +40,6 @@ public class MyLinkedListTester {
 		list1.add(65);
 		list1.add(21);
 		list1.add(42);
-		
 	}
 
 	
@@ -59,7 +56,7 @@ public class MyLinkedListTester {
 			fail("Check out of bounds");
 		}
 		catch (IndexOutOfBoundsException e) {
-			
+
 		}
 		
 		// test short list, first contents, then out of bounds
@@ -71,14 +68,14 @@ public class MyLinkedListTester {
 			fail("Check out of bounds");
 		}
 		catch (IndexOutOfBoundsException e) {
-		
+
 		}
 		try {
 			shortList.get(2);
 			fail("Check out of bounds");
 		}
 		catch (IndexOutOfBoundsException e) {
-		
+
 		}
 		// test longer list contents
 		for(int i = 0; i<LONG_LIST_LENGTH; i++ ) {
@@ -91,7 +88,7 @@ public class MyLinkedListTester {
 			fail("Check out of bounds");
 		}
 		catch (IndexOutOfBoundsException e) {
-		
+
 		}
 		try {
 			longerList.get(LONG_LIST_LENGTH);
@@ -113,7 +110,10 @@ public class MyLinkedListTester {
 		assertEquals("Remove: check a is correct ", 65, a);
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
-		
+
+		// TODO: add getMethod to return LLNode to test the following line
+		//  assertEquals(list1.head, list1.get(0).prev.data);
+
 		// TODO: Add more tests here
 	}
 	
@@ -123,8 +123,9 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddEnd()
 	{
-        // TODO: implement this test
-		
+		list1.add(99);
+		assertEquals(99, (int)list1.get(list1.size() - 1));
+		assertEquals(4, list1.size());
 	}
 
 	
@@ -132,7 +133,7 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
-		// TODO: implement this test
+		assertEquals(3, list1.size());
 	}
 
 	
@@ -144,8 +145,15 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddAtIndex()
 	{
-        // TODO: implement this test
-		
+		list1.add(0, 99);
+		assertEquals(99, (int)list1.get(0));
+		assertEquals(65, (int)list1.get(1));
+
+		list1.add(list1.size() - 1, 88);
+		assertEquals(88, (int)list1.get(list1.size() - 2));
+		assertEquals(42, (int)list1.get(list1.size() - 1));
+
+		assertEquals(5, list1.size());
 	}
 	
 	/** Test setting an element in the list */
@@ -153,10 +161,9 @@ public class MyLinkedListTester {
 	public void testSet()
 	{
 	    // TODO: implement this test
-	    
+		list1.set(0, 99);
+		assertEquals(99, (int)list1.get(0));
+		assertEquals(21, (int)list1.get(1));
+		assertEquals(3, list1.size());
 	}
-	
-	
-	// TODO: Optionally add more test methods.
-	
 }
