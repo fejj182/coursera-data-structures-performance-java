@@ -13,6 +13,7 @@ public class MarkovTextGeneratorLolTester {
         MarkovTextGeneratorLoL generator = new MarkovTextGeneratorLoL((new Random()));
         generator.train("hi there hi Leo");
         assertEquals("hi: there->Leo->\n", generator.wordList.get(0).toString());
+        assertEquals("Leo: hi->\n", generator.wordList.get(2).toString());
         assertEquals(3, generator.wordList.size());
     }
 }

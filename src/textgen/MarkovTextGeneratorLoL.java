@@ -1,9 +1,6 @@
 package textgen;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
+import java.util.*;
 
 /** 
  * An implementation of the MTG interface that uses a list of lists.
@@ -33,23 +30,25 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	public void train(String sourceText)
 	{
 		String[] words = sourceText.split(" ");
-		String starter;
-		String prevWord = new ListNode(words[0]).getWord();
 
-		for (int i=1; i < words.length; i++) {
-			starter = new ListNode(words[i]).getWord();
+		for (int i=1; i <= words.length; i++) {
+			starter = new ListNode(words[i == words.length ? 0 : i]).getWord();
+			String prevWord = new ListNode(words[i-1]).getWord();
 			ListNode newNode = new ListNode(prevWord);
 
+			boolean exists = false;
 			for (ListNode listNode: wordList) {
 				if (listNode.getWord().equals(prevWord)) {
 					newNode = listNode;
+					exists = true;
 				}
 			}
 
 			newNode.addNextWord(starter);
-			wordList.add(newNode);
 
-			prevWord = starter;
+			if (!exists) {
+				wordList.add(newNode);
+			}
 		}
 	}
 	
@@ -58,8 +57,26 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	 */
 	@Override
 	public String generateText(int numWords) {
-	    // TODO: Implement this method
-		return null;
+		ArrayList<String> outputWords = new ArrayList<>();
+		if (numWords > 0) {
+			String starter = wordList.get(0).getWord();
+			String nextWord = starter;
+
+			while (outputWords.size() < numWords) {
+
+				if (outputWords.size() > 0) {
+					for (ListNode listNode: wordList) {
+						if (listNode.getWord().equals(starter)) {
+							nextWord = listNode.getRandomNextWord(new Random());
+						}
+					}
+				}
+				outputWords.add(nextWord);
+				starter = nextWord;
+			}
+		}
+
+		return String.join(" ", outputWords);
 	}
 	
 	
@@ -91,7 +108,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	public static void main(String[] args)
 	{
 		// feed the generator a fixed random value for repeatable behavior
-		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random(42));
+		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random());
 		String textString = "Hello. Hello there. This is a test. Hello there. Hello Bob. Test again.";
 		System.out.println(textString);
 		gen.train(textString);
@@ -160,7 +177,8 @@ class ListNode
 		// TODO: Implement this method
 	    // The random number generator should be passed from 
 	    // the MarkovTextGeneratorLoL class
-	    return null;
+
+	    return nextWords.get(generator.nextInt(nextWords.size()));
 	}
 
 	public String toString()
