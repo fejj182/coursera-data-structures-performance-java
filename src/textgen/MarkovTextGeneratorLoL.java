@@ -12,7 +12,7 @@ import java.util.Random;
 public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 
 	// The list of words with their next words
-	private List<ListNode> wordList; 
+	public List<ListNode> wordList;
 	
 	// The starting "word"
 	private String starter;
@@ -32,7 +32,27 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void train(String sourceText)
 	{
-		// TODO: Implement this method
+		String[] words = sourceText.split(" ");
+		for (int i=0; i < words.length; i++) {
+			ListNode newNode = new ListNode(words[i]);
+
+			boolean contains = false;
+			for (ListNode listNode: wordList) {
+				if (listNode.getWord().equals(newNode.getWord())) {
+					contains = true;
+				}
+			}
+
+			if (!contains) {
+				for (int j=i; j < words.length; j++) {
+					if (words[j].equals(words[i])) {
+						String nextWord = (j != words.length - 1) ? words[j+1] : words[0];
+						newNode.addNextWord(nextWord);
+					}
+				}
+				wordList.add(newNode);
+			}
+		}
 	}
 	
 	/** 
@@ -61,11 +81,9 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
-		// TODO: Implement this method.
+		wordList = new LinkedList<ListNode>();
+		train(sourceText);
 	}
-	
-	// TODO: Add any private helper methods you need here.
-	
 	
 	/**
 	 * This is a minimal set of tests.  Note that it can be difficult
@@ -76,7 +94,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	{
 		// feed the generator a fixed random value for repeatable behavior
 		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random(42));
-		String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
+		String textString = "Hello. Hello there. This is a test. Hello there. Hello Bob. Test again.";
 		System.out.println(textString);
 		gen.train(textString);
 		System.out.println(gen);
