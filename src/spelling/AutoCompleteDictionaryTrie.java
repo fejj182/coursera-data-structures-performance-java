@@ -1,10 +1,6 @@
 package spelling;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /** 
  * An trie data structure that implements the Dictionary and the AutoComplete ADT
@@ -39,8 +35,24 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public boolean addWord(String word)
 	{
-	    //TODO: Implement this method.
-	    return false;
+		String wordLower = word.toLowerCase();
+		TrieNode curr = root;
+
+		for (int i=0; i < wordLower.length(); i++) {
+			char c = wordLower.toCharArray()[i];
+			if (curr.getChild(c) == null) {
+				curr.insert(c);
+			}
+			curr = curr.getChild(c);
+		}
+
+		if (curr.endsWord()) {
+			return false;
+		} else {
+			curr.setEndsWord(true);
+			return true;
+		}
+
 	}
 	
 	/** 
@@ -49,8 +61,22 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-	    //TODO: Implement this method
-	    return 0;
+		Queue<TrieNode> nodesToVisit = new LinkedList<TrieNode>();
+		nodesToVisit.add(root);
+		while(!nodesToVisit.isEmpty()) {
+			TrieNode curr = nodesToVisit.remove();
+			if (curr.endsWord()) {
+				size++;
+			}
+			if (curr != null) {
+				Set<Character> currChildren = curr.getValidNextCharacters();
+				Iterator<Character> it = currChildren.iterator();
+				while(it.hasNext()){
+					nodesToVisit.add(curr.getChild(it.next()));
+				}
+			}
+		}
+	    return size;
 	}
 	
 	
@@ -59,8 +85,17 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
-	    // TODO: Implement this method
-		return false;
+		String wordLower = s.toLowerCase();
+		TrieNode curr = root;
+
+		for (int i=0; i < wordLower.length(); i++) {
+			char c = wordLower.toCharArray()[i];
+			if (curr.getChild(c) == null) {
+				curr.insert(c);
+			}
+			curr = curr.getChild(c);
+		}
+		return curr.endsWord();
 	}
 
 	/** 
