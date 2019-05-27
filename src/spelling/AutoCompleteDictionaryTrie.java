@@ -61,22 +61,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-		Queue<TrieNode> nodesToVisit = new LinkedList<TrieNode>();
-		nodesToVisit.add(root);
-		while(!nodesToVisit.isEmpty()) {
-			TrieNode curr = nodesToVisit.remove();
-			if (curr.endsWord()) {
-				size++;
-			}
-			if (curr != null) {
-				Set<Character> currChildren = curr.getValidNextCharacters();
-				Iterator<Character> it = currChildren.iterator();
-				while(it.hasNext()){
-					nodesToVisit.add(curr.getChild(it.next()));
-				}
-			}
-		}
-	    return size;
+		return getCompletions(root).size();
 	}
 	
 	
@@ -135,9 +120,48 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
+
+		 String wordLower = prefix.toLowerCase();
+		 TrieNode currentNode = root;
+
+		 int i = 0;
+
+		 while (i < wordLower.length() && currentNode != null) {
+			 char c = wordLower.toCharArray()[i];
+			 currentNode = currentNode.getChild(c);
+			 i++;
+		 }
+
+		 return getCompletions(currentNode, true, numCompletions);
      }
+
+     private List<String> getCompletions(TrieNode root) {
+		 return getCompletions(root, false, -1);
+     }
+
+     private List<String> getCompletions(TrieNode root, boolean maxCompletions, int numCompletions)
+	 {
+		 Queue<TrieNode> nodesToVisit = new LinkedList<TrieNode>();
+		 nodesToVisit.add(root);
+		 List<String> completions = new ArrayList<>();
+
+
+		 while(!nodesToVisit.isEmpty() && (!maxCompletions || completions.size() < numCompletions)) {
+			 TrieNode curr = nodesToVisit.remove();
+			 if (curr != null) {
+				 if (curr.endsWord()) {
+					 completions.add(curr.getText());
+				 }
+				 Set<Character> currChildren = curr.getValidNextCharacters();
+				 Iterator<Character> it = currChildren.iterator();
+				 while(it.hasNext()){
+					 nodesToVisit.add(curr.getChild(it.next()));
+				 }
+			 }
+		 }
+
+		 return completions;
+	 }
 
  	// For debugging
  	public void printTree()
