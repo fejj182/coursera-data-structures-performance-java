@@ -98,4 +98,39 @@ public class NearbyWordsTester {
         w.deletions(word, retList, true);
         assertEquals(0, retList.size());
     }
+
+    @Test
+    public void validSuggestionsOneLevel()
+    {
+        String word = "wrestls";
+        List <String> suggestions = w.suggestions(word, 3);
+        System.out.println(suggestions);
+        assertEquals(3, suggestions.size());
+        assertEquals("wrestles", suggestions.get(0));
+        assertEquals("wrestle", suggestions.get(1));
+        assertEquals("wrests", suggestions.get(2));
+    }
+
+    @Test
+    public void validSuggestionsMultipleLevels()
+    {
+        String word = "wrestls";
+        List <String> suggestions = w.suggestions(word, 5);
+        System.out.println(suggestions);
+        assertEquals(5, suggestions.size());
+        assertEquals("wrestles", suggestions.get(0));
+        assertEquals("wrestle", suggestions.get(1));
+        assertEquals("wrests", suggestions.get(2));
+        assertEquals("wrestlers", suggestions.get(3));
+        assertEquals("trestles", suggestions.get(4));
+    }
+
+    @Test
+    public void blankSuggestions()
+    {
+        String word = "";
+        List <String> suggestions = w.suggestions(word, 5);
+        assertEquals(0, retList.size());
+    }
+
 }

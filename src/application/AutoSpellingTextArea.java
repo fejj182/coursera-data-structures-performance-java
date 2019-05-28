@@ -97,7 +97,7 @@ public class AutoSpellingTextArea extends StyledTextArea<Boolean> {
 
 		// register mouse click for correcting misspelled words
 		this.setOnMouseClicked(e -> {
-			if ((e.getButton() == MouseButton.SECONDARY) && spellingOn) {
+			if ((e.getButton() == MouseButton.PRIMARY) && spellingOn) {
 				// get StyledTextAreaView object
 				styledView = getChildrenUnmodifiable().get(0);
 
