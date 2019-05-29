@@ -4,9 +4,7 @@
 package spelling;
 
 //import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * WPTree implements WordPath by dynamically creating a tree of words during a Breadth First
@@ -20,13 +18,14 @@ public class WPTree implements WordPath {
 	// this is the root node of the WPTree
 	private WPTreeNode root;
 	// used to search for nearby Words
-	private NearbyWords nw; 
+	private NearbyWords nw;
+
+    private static final int THRESHOLD = 1000;
 	
 	// This constructor is used by the Text Editor Application
 	// You'll need to create your own NearbyWords object here.
 	public WPTree () {
 		this.root = null;
-		// TODO initialize a NearbyWords object
 		// Dictionary d = new DictionaryHashSet();
 		// DictionaryLoader.loadDictionary(d, "data/dict.txt");
 		// this.nw = new NearbyWords(d);
@@ -41,7 +40,37 @@ public class WPTree implements WordPath {
 	// see method description in WordPath interface
 	public List<String> findPath(String word1, String word2) 
 	{
-	    // TODO: Implement this method.
+	    if (!nw.dict.isWord(word1)) {
+	        throw new IllegalArgumentException("Word 1: " + word1 + " is not in the dictionary");
+        }
+
+        if (!nw.dict.isWord(word2)) {
+            throw new IllegalArgumentException("Word 2: " + word2 + " is not in the dictionary");
+        }
+
+	    Queue<WPTreeNode> queue = new LinkedList<>();
+        HashSet<String> visited = new HashSet<String>();
+
+	    root = new WPTreeNode(word1, null);
+	    queue.add(root);
+
+	    while (!queue.isEmpty()) {
+            WPTreeNode curr = queue.remove();
+            visited.add(curr.getWord());
+            List<String> wordsOneStepAway = nw.distanceOne(curr.getWord(), true);
+            Iterator<String> wordsIterator = wordsOneStepAway.iterator();
+            while (wordsIterator.hasNext() && visited.size() < THRESHOLD) {
+                String nextWord = wordsIterator.next();
+                WPTreeNode wordChild = curr.addChild(nextWord);
+                if (!visited.contains(nextWord)) {
+                    queue.add(wordChild);
+                    if (nextWord.equals(word2)) {
+                        return wordChild.buildPathToRoot();
+                    }
+                }
+            }
+        }
+
 	    return new LinkedList<String>();
 	}
 	
