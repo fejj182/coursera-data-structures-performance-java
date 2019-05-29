@@ -56,10 +56,10 @@ public class WPTreeGrader {
             feedback += "** Test #3: Testing impossible path...";
             feedback += "Your path was: " + printPath(path) + ".\n";
 
-//            path = tree.findPath("needle", "kitten");
-//
-//            feedback += "** Test #4: Testing using a nonexistent word...";
-//            feedback += "Your path was: " + printPath(path) + ".\n";
+            path = tree.findPath("needle", "kitten");
+
+            feedback += "** Test #4: Testing using a nonexistent word...";
+            feedback += "Your path was: " + printPath(path) + ".\n";
         } catch (Exception e) {
             out.println(e);
             out.close();

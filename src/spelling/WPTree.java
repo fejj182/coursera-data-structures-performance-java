@@ -40,12 +40,8 @@ public class WPTree implements WordPath {
 	// see method description in WordPath interface
 	public List<String> findPath(String word1, String word2) 
 	{
-	    if (!nw.dict.isWord(word1)) {
-	        throw new IllegalArgumentException("Word 1: " + word1 + " is not in the dictionary");
-        }
-
-        if (!nw.dict.isWord(word2)) {
-            throw new IllegalArgumentException("Word 2: " + word2 + " is not in the dictionary");
+	    if (!nw.dict.isWord(word1) || !nw.dict.isWord(word2)) {
+            return new LinkedList<String>();
         }
 
 	    Queue<WPTreeNode> queue = new LinkedList<>();

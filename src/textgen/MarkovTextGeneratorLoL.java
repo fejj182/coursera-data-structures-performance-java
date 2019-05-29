@@ -57,6 +57,10 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	 */
 	@Override
 	public String generateText(int numWords) {
+		if (wordList.size() == 0) {
+			return "";
+		}
+
 		ArrayList<String> outputWords = new ArrayList<>();
 		if (numWords > 0) {
 			String starter = wordList.get(0).getWord();

@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class WPTreeTester {
@@ -49,11 +48,7 @@ public class WPTreeTester {
     @Test
     public void test_path_with_non_existent_word()
     {
-        try {
-            List<String> path = tree.findPath("needle", "kitten");
-            fail("Not catching non existent word");
-        } catch (IllegalArgumentException e) {
-
-        }
+        List<String> path = tree.findPath("needle", "kitten");
+        assertEquals(0, path.size());
     }
 }
